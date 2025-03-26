@@ -1,0 +1,26 @@
+*{
+    font-family: "Barlow Condensed", sans-serif;
+
+}
+
+body {
+    position: relative;
+    overflow: hidden;
+    background: url('https://i.ytimg.com/vi/ZK0mhMwOm4I/maxresdefault.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px); /* Adjust as needed */
+    transform: scale(1.2); /* Prevents sharp edges on blur */
+    z-index: -1;
+}

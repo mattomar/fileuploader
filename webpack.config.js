@@ -8,7 +8,7 @@ module.exports = {
         filename: 'index.bundle.js',
     },
     devServer: {
-        port: 3000,
+        port: 3003,
         open: true,
         hot: true,
         static: path.resolve(__dirname, 'dist'), // Serve content from the 'dist' folder

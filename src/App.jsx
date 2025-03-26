@@ -1,20 +1,24 @@
 import React from "react";
+import Header from "./ components/header";
+import routes from "./routes/routes";
+import "../src/styles/App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-  function App() {
-    const animals = ["Lion", "Cow", "Snake", "Lizard"];
-    const animalsList = animals.map((animal) => <li key={animal}>{animal}</li>)
-  
-    return (
-      <div>
-        <h1>Animals: </h1>
-        <ul>
-          {animalsList}
-        </ul>
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Header /> {/* Keep Header outside Routes */}
+      <div className="app-container">
+        <Routes>
+          {routes.map(({ path, element }, index) => (
+            <Route key={index} path={path} element={element} />
+          ))}
+        </Routes>
       </div>
-    );
-  }
+    </BrowserRouter>
+  );
+}
 
-  export default App;
 
-
- 
+export default App;

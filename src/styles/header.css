@@ -1,0 +1,72 @@
+
+
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+
+  }
+
+  
+  .logo h1{
+    font-size: 19px;
+    font-family: "Barlow Condensed", sans-serif;
+    font-weight: 300; /* Or 200 for a slightly heavier look */
+    
+
+  }
+  .bold {
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 2px;
+    font-family: "Barlow Condensed", sans-serif;
+
+
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+  }
+  
+  .sign-in {
+    background: #444;
+    color: white;
+  }
+  
+  .sign-in:hover {
+    background: #666;
+  }
+  
+  .sign-up {
+    background: #007bff;
+    color: white;
+  }
+  
+  .sign-up:hover {
+    background: #0056b3;
+  }
+
+  .cloud-icon {
+    width: auto; /* Keeps original aspect ratio */
+    height: 30px; /* Adjust based on your layout */
+    object-fit: contain; /* Ensures image scales properly */
+
+  }

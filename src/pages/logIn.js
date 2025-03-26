@@ -1,10 +1,8 @@
-import AuthForm from "../components/authForm";
+import AuthForm from "../ components/authForm";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [error, setError] = useState(""); // State for error message
-  const navigate = useNavigate();
 
   const handleLogin = async (e, { email, password }) => {
     e.preventDefault();
@@ -22,7 +20,6 @@ const Login = () => {
       if (response.ok) {
         console.log("Login successful:", data);
         localStorage.setItem("token", data.token);
-        navigate("/home");
       } else {
         setError(data.message || "Invalid email or password.");
       }
