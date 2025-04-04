@@ -1,31 +1,23 @@
-import AuthForm from "../ components/authForm";
 import React, { useState } from "react";
+import axios from "axios";
+import AuthForm from "../components/authForm";
 
 const Login = () => {
-  const [error, setError] = useState(""); // State for error message
+  const [error, setError] = useState("");
 
   const handleLogin = async (e, { email, password }) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
-      const response = await fetch("https://club-members-server-production.up.railway.app/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const { data } = await axios.post("http://localhost:5005/api/auth/login", { email, password });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Login successful:", data);
-        localStorage.setItem("token", data.token);
-      } else {
-        setError(data.message || "Invalid email or password.");
-      }
-    } catch (error) {
-      setError("Error connecting to the server.");
-      console.error(error);
+      console.log("Login successful:", data);
+      localStorage.setItem("token", data.token);
+    } catch (err) {
+      setError(err.response?.data?.message || "Error connecting to the server.");
+      console.error(
+      );
     }
   };
 

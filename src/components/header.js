@@ -1,6 +1,7 @@
 import React from "react";
-import "../styles/header.css"; // Import your styles
-import cloudIcon from "../assets/cloud.png"; // Import image correctly
+import { Link } from "react-router-dom"; // ✅ Import Link
+import "../styles/header.css"; 
+import cloudIcon from "../assets/cloud.png"; 
 
 const Header = () => {
   return (
@@ -15,8 +16,8 @@ const Header = () => {
 
       {/* Auth Buttons */}
       <div className="auth-buttons">
-        <button className="btn sign-in">Sign In</button>
-        <button className="btn sign-up">Sign Up</button>
+        <Link to="/" className="btn sign-in">Sign In</Link>
+        <Link to="/signup" className="btn sign-up">Sign Up</Link>
       </div>
     </header>
   );

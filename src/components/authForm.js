@@ -8,7 +8,7 @@ const AuthForm = ({ type, onSubmit }) => {
   const [password, setPassword] = useState("");
 
   return (
-    <form onSubmit={(e) => onSubmit(e, { firstName, lastName, email, password, adminKey })}>
+    <form onSubmit={(e) => onSubmit(e, { firstName, lastName, email, password })}>
       <h2>{type === "signup" ? "Sign Up" : "Log In"}</h2>
 
       {type === "signup" && (
