@@ -10,7 +10,7 @@ const Login = () => {
     setError("");
 
     try {
-      const { data } = await axios.post("http://localhost:5005/api/auth/login", { email, password });
+      const { data } = await axios.post("http://localhost:5007/api/auth/login", { email, password });
 
       console.log("Login successful:", data);
       localStorage.setItem("token", data.token);

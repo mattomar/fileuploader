@@ -97,3 +97,14 @@
     color: white;
     margin-top: 5px;
 }
+
+.uploaded-url {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.uploaded-url a {
+  color: #4a90e2;
+  word-break: break-all;
+}
