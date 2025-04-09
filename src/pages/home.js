@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/home.css";
 import hardisckIcon from "../assets/hardisck.png"; 
-
+import UploadButton from "../components/uploadFileButton";
 const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedURL, setUploadedURL] = useState("");
@@ -11,24 +11,29 @@ const Home = () => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     setSelectedFile(file);
     setUploading(true);
     setError("");
     setUploadedURL("");
-
+  
     const formData = new FormData();
     formData.append("file", file);
-
+  
+    const token = localStorage.getItem("token");
+  
     try {
-      const res = await fetch("http://localhost:5019/api/upload", {
+      const res = await fetch("http://localhost:5014/api/upload", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
-
+  
       const data = await res.json();
       console.log("Upload response:", data);
-
+  
       if (data.url) {
         setUploadedURL(data.url);
       } else {
@@ -52,21 +57,12 @@ const Home = () => {
 
       <div className="upload-folder">
         <img src={hardisckIcon} alt="Storage" className="storage-icon" />
-        
-        <input 
-          type="file" 
-          id="file-upload" 
+
+        <UploadButton 
+          uploading={uploading} 
+          selectedFile={selectedFile} 
           onChange={handleFileChange} 
-          hidden 
         />
-        
-        <label htmlFor="file-upload" className="upload-btn">
-          {uploading
-            ? "Uploading..."
-            : selectedFile
-            ? "File Selected"
-            : "Upload"}
-        </label>
 
         {selectedFile && !uploading && (
           <p className="file-name">{selectedFile.name}</p>

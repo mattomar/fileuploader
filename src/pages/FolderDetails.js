@@ -11,7 +11,7 @@ const FolderDetails = () => {
   useEffect(() => {
     const fetchFolder = async () => {
       try {
-        const res = await fetch(`http://localhost:5019/api/folders/${id}`, {
+        const res = await fetch(`http://localhost:5014/api/folders/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
