@@ -20,10 +20,10 @@ const FolderFileView = () => {
   const fetchFoldersAndFiles = async () => {
     try {
       const folderData = await fetchFolders();
-      setFolders(folderData);
+      setFolders(Array.isArray(folderData) ? folderData : []);
 
       const { files } = await fetchFiles();
-      const unsorted = files.filter(file => !file.folderId);
+      const unsorted = files.filter((file) => !file.folderId);
       setOrphanFiles(unsorted);
     } catch (err) {
       console.error("Error fetching folders/files", err);
@@ -90,12 +90,14 @@ const FolderFileView = () => {
 
       {/* Create Folder */}
       <CreateFolder
-        onFolderCreated={(newFolder) => setFolders(prev => [newFolder, ...prev])}
+        onFolderCreated={(newFolder) =>
+          setFolders((prev) => [newFolder, ...prev])
+        }
       />
 
       {/* Folder grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        {folders.map(folder => (
+        {folders.map((folder) => (
           <FolderCard key={folder.id} folder={folder} />
         ))}
       </div>
@@ -105,7 +107,7 @@ const FolderFileView = () => {
         <>
           <h2 className="text-lg font-semibold mt-6 mb-2">Files Outside Folders</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {orphanFiles.map(file => (
+            {orphanFiles.map((file) => (
               <FileCard key={file.id} file={file} />
             ))}
           </div>
