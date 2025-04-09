@@ -3,6 +3,7 @@ import FolderCard from "./folderCard";
 import FileCard from "./fileCard";
 import CreateFolder from "./createFolderForm";
 import UploadButton from "../components/uploadFileButton";
+import { fetchFolders, fetchFiles, uploadFile } from "../utils/api";
 
 const FolderFileView = () => {
   const [folders, setFolders] = useState([]);
@@ -12,34 +13,16 @@ const FolderFileView = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     fetchFoldersAndFiles();
   }, []);
 
   const fetchFoldersAndFiles = async () => {
     try {
-      const folderRes = await fetch("http://localhost:5014/api/folders", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!folderRes.ok) throw new Error("Failed to fetch folders");
-      const folderData = await folderRes.json();
+      const folderData = await fetchFolders();
       setFolders(folderData);
 
-      const fileRes = await fetch("http://localhost:5014/api/files", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!fileRes.ok) throw new Error("Failed to fetch files");
-      const { files } = await fileRes.json();
+      const { files } = await fetchFiles();
       const unsorted = files.filter(file => !file.folderId);
       setOrphanFiles(unsorted);
     } catch (err) {
@@ -56,19 +39,8 @@ const FolderFileView = () => {
     setError("");
     setUploadedURL("");
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const res = await fetch("http://localhost:5014/api/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
+      const data = await uploadFile(file);
       if (data.url) {
         setUploadedURL(data.url);
         fetchFoldersAndFiles(); // Refresh files

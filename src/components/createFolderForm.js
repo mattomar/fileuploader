@@ -1,32 +1,18 @@
 import React, { useState } from "react";
+import { createFolder } from "../utils/api";
 
 const CreateFolder = ({ onFolderCreated }) => {
   const [folderName, setFolderName] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const token = localStorage.getItem("token");
 
   const handleCreate = async () => {
     if (!folderName.trim()) return;
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5014/api/folders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: folderName }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to create folder");
-      }
-
-      const newFolder = await res.json();
-      onFolderCreated(newFolder); // notify parent
-      setFolderName(""); // clear input
+      const newFolder = await createFolder(folderName);
+      onFolderCreated(newFolder);
+      setFolderName("");
     } catch (err) {
       console.error("Error creating folder:", err);
     } finally {
