@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom"; // ✅ Import Link
-import "../styles/header.css"; 
-import cloudIcon from "../assets/cloud.png"; 
+import { Link } from "react-router-dom";
+import "../styles/header.css";
+import cloudIcon from "../assets/cloud.png";
 
 const Header = () => {
   return (
@@ -14,9 +14,10 @@ const Header = () => {
         </h1>
       </div>
 
-      {/* Auth Buttons */}
+      {/* Navigation & Auth Buttons */}
       <div className="auth-buttons">
-        <Link to="/" className="btn sign-in">Sign In</Link>
+        <Link to="/folders" className="btn">My Folders</Link> {/* 🔹 New Folder Link */}
+        <Link to="/login" className="btn sign-in">Sign In</Link>
         <Link to="/signup" className="btn sign-up">Sign Up</Link>
       </div>
     </header>

@@ -3,6 +3,8 @@ import React from "react";
 import Login from "../pages/logIn";
 import Signup from "../pages/signUp";
 import Home from "../pages/home";
+import FolderPage from "../pages/folder";
+import FolderDetails from "../pages/FolderDetails";
 
 
 const routes = [
@@ -17,7 +19,14 @@ const routes = [
     {
     path: "/login",
     element: <Login />, // Default route
-  }
+  },
+  {
+    path: "/folders",
+    element: <FolderPage />
+  },
+  { path: "/folder/:id", 
+  element: <FolderDetails /> 
+},
 
   ];
   

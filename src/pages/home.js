@@ -21,7 +21,7 @@ const Home = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:5008/api/upload", {
+      const res = await fetch("http://localhost:5019/api/upload", {
         method: "POST",
         body: formData,
       });
