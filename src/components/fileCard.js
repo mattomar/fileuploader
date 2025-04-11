@@ -31,21 +31,22 @@ const FileCard = ({ file, onDelete }) => {
     e.dataTransfer.setData("name", file.name);
   };
 
+  const handleOpenFile = () => {
+    window.open(file.path, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div
       className="card file-card"
       draggable
       onDragStart={handleDragStart}
+      onClick={handleOpenFile}
+      style={{ cursor: "pointer" }}
     >
       <img className="file-icon" src={getFileIcon(file.name)} alt="file type" />
-      <a
-        className="card-name"
-        href={`${file.path}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        {file.name}
-      </a>
+      
+      <span className="card-name">{file.name}</span>
+      
       <img
         className="delete-btn"
         src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
