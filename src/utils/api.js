@@ -1,6 +1,6 @@
-const API_BASE = "http://localhost:5012";
+const API_BASE = "http://localhost:5018";
 
-const getToken = () => localStorage.getItem("token");
+export const getToken = () => localStorage.getItem("token");
 
 export const uploadFile = async (file) => {
   const formData = new FormData();
@@ -76,3 +76,50 @@ export const uploadFileToFolder = async (file, folderId) => {
     return res.json();
   };
   
+
+  export const deleteFolder = async (folderId) => {
+    const res = await fetch(`${API_BASE}/api/folders/${folderId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    });
+
+    
+  
+    return res.json();
+  };
+
+  export const deleteFile = async (fileId) => {
+    const res = await fetch(`${API_BASE}/api/files/${fileId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete file");
+    return await res.json();
+  };
+
+
+  export const moveFile = async (fileId, targetFolderId) => {
+    return fetch(`${API_BASE}/api/files/${fileId}/move`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({ targetFolderId }),
+    });
+  };
+  
+  export const moveFolder = async (folderId, targetFolderId) => {
+    return fetch(`${API_BASE}/api/folders/${folderId}/move`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({ parentFolderId: targetFolderId }),
+    });
+  };

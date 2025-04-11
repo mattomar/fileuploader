@@ -1,40 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/home.css";
-import hardisckIcon from "../assets/hardisck.png"; 
+import hardisckIcon from "../assets/hardisck.png";
 import UploadButton from "../components/uploadFileButton";
+import {
+  fetchFolders,
+  uploadFileToFolder,
+  uploadFile,
+  getToken
+} from "../utils/api";
+import { Link } from "react-router-dom";
+
+
 const Home = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFolder, setSelectedFolder] = useState("");
+  const [folders, setFolders] = useState([]);
   const [uploadedURL, setUploadedURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleFileChange = async (event) => {
+  useEffect(() => {
+    const loadFolders = async () => {
+      try {
+        const data = await fetchFolders();
+        setFolders(data);
+      } catch (err) {
+        console.error("Failed to fetch folders:", err);
+      }
+    };
+    loadFolders();
+  }, []);
+
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     setSelectedFile(file);
+    setError("");
+    setUploadedURL("");
+  };
+
+  const handleUploadClick = async () => {
+    if (!selectedFile) return;
+
     setUploading(true);
     setError("");
     setUploadedURL("");
-  
-    const formData = new FormData();
-    formData.append("file", file);
-  
-    const token = localStorage.getItem("token");
-  
+
     try {
-      const res = await fetch("http://localhost:5014/api/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-  
-      const data = await res.json();
+      const data = selectedFolder
+        ? await uploadFileToFolder(selectedFile, selectedFolder)
+        : await uploadFile(selectedFile);
+
       console.log("Upload response:", data);
-  
-      if (data.url) {
+
+      if (data?.url) {
         setUploadedURL(data.url);
       } else {
         setError("Upload succeeded, but no URL returned.");
@@ -54,31 +74,64 @@ const Home = () => {
       <div className="desc">
         Upload a file to <strong>Shadow Drive</strong> and get a sharable link
       </div>
-
+  
       <div className="upload-folder">
-        <img src={hardisckIcon} alt="Storage" className="storage-icon" />
+  {!getToken() && (
+    <div className="blur-overlay">
+      <p>
+        Please <Link to="/login">sign in</Link> or{" "}
+        <Link to="/signup">sign up</Link> to upload files.
+      </p>
+    </div>
+  )}
 
-        <UploadButton 
-          uploading={uploading} 
-          selectedFile={selectedFile} 
-          onChange={handleFileChange} 
-        />
+  <img src={hardisckIcon} alt="Storage" className="storage-icon" />
 
-        {selectedFile && !uploading && (
-          <p className="file-name">{selectedFile.name}</p>
-        )}
+  <select
+    value={selectedFolder}
+    onChange={(e) => setSelectedFolder(e.target.value)}
+    className="folder-dropdown"
+    disabled={!getToken()}
+  >
+    <option value="">Select folder (or save outside)</option>
+    {Array.isArray(folders) &&
+      folders.map((folder) => (
+        <option key={folder.id} value={folder.id}>
+          {folder.name}
+        </option>
+      ))}
+  </select>
 
-        {uploadedURL && (
-          <div className="uploaded-url">
-            <p>Uploaded URL:</p>
-            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-              {uploadedURL}
-            </a>
-          </div>
-        )}
+  <UploadButton
+    uploading={uploading}
+    selectedFile={selectedFile}
+    onChange={handleFileChange}
+    disabled={!getToken()}
+  />
 
-        {error && <p className="upload-error">{error}</p>}
-      </div>
+  {selectedFile && <p className="file-name">{selectedFile.name}</p>}
+
+  {selectedFile && (
+    <button
+      className="upload-real-btn"
+      onClick={handleUploadClick}
+      disabled={uploading || !getToken()}
+    >
+      {uploading ? "Uploading..." : "Upload"}
+    </button>
+  )}
+
+  {uploadedURL && (
+    <div className="uploaded-url">
+      <p>Uploaded URL:</p>
+      <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
+        {uploadedURL}
+      </a>
+    </div>
+  )}
+
+  {error && <p className="upload-error">{error}</p>}
+</div>
     </div>
   );
 };

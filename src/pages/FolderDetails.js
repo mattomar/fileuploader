@@ -2,21 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FolderCard from "../components/folderCard";
 import FileCard from "../components/fileCard";
-import { uploadFileToFolder, createSubFolder, getFolderById } from "../utils/api";
+import UploadButton from "../components/uploadFileButton";
+import CreateFolder from "../components/createFolderForm";
+import {
+  uploadFileToFolder,
+  createSubFolder,
+  getFolderById,
+} from "../utils/api";
+
+import "../styles/folderDetails.css";
 
 const FolderDetails = () => {
   const { id } = useParams();
   const [folder, setFolder] = useState(null);
   const [files, setFiles] = useState([]);
   const [subfolders, setSubfolders] = useState([]);
-  const [folderName, setFolderName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedURL, setUploadedURL] = useState("");
+  const [error, setError] = useState("");
 
   const fetchFolder = async () => {
     try {
       const data = await getFolderById(id);
       setFolder(data.folder);
-      setFiles(data.files);
+      setFiles(data.files || []);
       setSubfolders(data.subfolders || []);
     } catch (err) {
       console.error("Error fetching folder details:", err);
@@ -27,83 +37,68 @@ const FolderDetails = () => {
     fetchFolder();
   }, [id]);
 
-  const handleUpload = async (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    setSelectedFile(file);
     setUploading(true);
+    setError("");
+    setUploadedURL("");
+
     try {
-      await uploadFileToFolder(file, id);
+      const result = await uploadFileToFolder(file, id);
       await fetchFolder();
+      setUploadedURL(result?.url || ""); // Adjust based on actual API response
     } catch (err) {
       console.error("Upload failed:", err);
+      setError("Upload failed. Please try again.");
     } finally {
       setUploading(false);
     }
   };
 
-  const handleCreateFolder = async () => {
-    if (!folderName.trim()) return;
-    try {
-      await createSubFolder(folderName, id);
-      setFolderName("");
-      await fetchFolder();
-    } catch (err) {
-      console.error("Failed to create subfolder:", err);
-    }
+  const handleNewFolder = (newFolder) => {
+    setSubfolders((prev) => [newFolder, ...prev]);
   };
 
   if (!folder) return <p>Loading...</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">{folder.name}</h1>
+    <div className="folder-file-container">
+      <h1 className="main-title">{folder.name}</h1>
 
-      {/* Upload + Subfolder UI */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Upload File to This Folder:</label>
-          <input
-            type="file"
-            onChange={handleUpload}
-            disabled={uploading}
-            className="text-sm"
+      <div className="upload-section">
+        <div className="button-row">
+          <UploadButton
+            uploading={uploading}
+            selectedFile={selectedFile}
+            onChange={handleFileChange}
           />
+
+          <CreateFolder parentId={id} onFolderCreated={handleNewFolder} />
         </div>
 
-        <div>
-          <label className="block mb-1 font-medium">Create Subfolder:</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="Folder name"
-              value={folderName}
-              onChange={(e) => setFolderName(e.target.value)}
-              className="border px-2 py-1 text-sm rounded w-full"
-            />
-            <button
-              onClick={handleCreateFolder}
-              className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
-            >
-              Create
-            </button>
+        {selectedFile && !uploading && (
+          <p className="selected-file">{selectedFile.name}</p>
+        )}
+
+        {uploadedURL && (
+          <div className="upload-result">
+            <p className="upload-success">Uploaded URL:</p>
+            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
+              {uploadedURL}
+            </a>
           </div>
-        </div>
+        )}
+
+        {error && <p className="upload-error">{error}</p>}
       </div>
 
-      {/* Subfolders */}
-      {subfolders.length > 0 && (
-        <>
-          <h2 className="text-lg font-semibold mb-2">Subfolders</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            {subfolders.map((sub) => (
-              <FolderCard key={sub.id} folder={sub} />
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* Files */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="folder-list">
+        {subfolders.map((sub) => (
+          <FolderCard key={sub.id} folder={sub} />
+        ))}
         {files.map((file) => (
           <FileCard key={file.id} file={file} />
         ))}

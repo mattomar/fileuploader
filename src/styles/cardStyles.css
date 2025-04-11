@@ -1,0 +1,82 @@
+.card {
+    width: 160px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.2); /* translucent */
+    backdrop-filter: blur(10px); /* blur background */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px);
+  }
+  
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  
+  .card-name {
+    font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+  }
+  
+  .card-info {
+    font-size: 0.85rem;
+    color: #fffdfd;
+  }
+
+  .folder-card {
+    position: relative;
+  }
+
+  .file-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+
+  .delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #ff4d4d;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+  
+
+
+  
+  .delete-btn:hover {
+    transform: scale(1.1);
+
+  }
+  
+
+  .drag-over {
+    border: 2px dashed #007bff;
+    background-color: #e9f5ff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+  }

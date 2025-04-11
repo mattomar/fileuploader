@@ -4,6 +4,7 @@ import FileCard from "./fileCard";
 import CreateFolder from "./createFolderForm";
 import UploadButton from "../components/uploadFileButton";
 import { fetchFolders, fetchFiles, uploadFile } from "../utils/api";
+import "../styles/folderFileView.css";
 
 const FolderFileView = () => {
   const [folders, setFolders] = useState([]);
@@ -56,63 +57,54 @@ const FolderFileView = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">My Folders</h1>
+    <div className="folder-file-container">
+      <h1 className="main-title">My Folders</h1>
 
-      {/* Upload Section */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <UploadButton
-          uploading={uploading}
-          selectedFile={selectedFile}
-          onChange={handleFileChange}
-        />
+      <div className="upload-section">
+        <div className="button-row">
+          <UploadButton
+            uploading={uploading}
+            selectedFile={selectedFile}
+            onChange={handleFileChange}
+          />
 
-        {selectedFile && !uploading && (
-          <p className="mt-2 text-sm text-gray-700">{selectedFile.name}</p>
-        )}
+          <CreateFolder onFolderCreated={(newFolder) => setFolders((prev) => [newFolder, ...prev])} />
+        </div>
+
+        {selectedFile && !uploading && <p className="selected-file">{selectedFile.name}</p>}
 
         {uploadedURL && (
-          <div className="mt-2 text-sm">
-            <p className="text-green-600">Uploaded URL:</p>
-            <a
-              href={uploadedURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
+          <div className="upload-result">
+            <p className="upload-success">Uploaded URL:</p>
+            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
               {uploadedURL}
             </a>
           </div>
         )}
 
-        {error && <p className="text-red-600 mt-2">{error}</p>}
+        {error && <p className="upload-error">{error}</p>}
       </div>
 
-      {/* Create Folder */}
-      <CreateFolder
-        onFolderCreated={(newFolder) =>
-          setFolders((prev) => [newFolder, ...prev])
-        }
-      />
-
-      {/* Folder grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+      <div className="folder-list">
         {folders.map((folder) => (
-          <FolderCard key={folder.id} folder={folder} />
+          <FolderCard
+            key={folder.id}
+            folder={folder}
+            onDelete={(deletedId) =>
+              setFolders((prevFolders) => prevFolders.filter((f) => f.id !== deletedId))
+            }
+          />
+        ))}
+        {orphanFiles.map((file) => (
+          <FileCard
+            key={file.id}
+            file={file}
+            onDelete={(deletedId) =>
+              setOrphanFiles((prev) => prev.filter((f) => f.id !== deletedId))
+            }
+          />
         ))}
       </div>
-
-      {/* Orphan files */}
-      {orphanFiles.length > 0 && (
-        <>
-          <h2 className="text-lg font-semibold mt-6 mb-2">Files Outside Folders</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {orphanFiles.map((file) => (
-              <FileCard key={file.id} file={file} />
-            ))}
-          </div>
-        </>
-      )}
     </div>
   );
 };

@@ -1,12 +1,22 @@
 *{
     font-family: "Barlow Condensed", sans-serif;
 
-}
 
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root, .app-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 body {
     position: relative;
-    overflow: hidden;
-    background: url('https://i.ytimg.com/vi/ZK0mhMwOm4I/maxresdefault.jpg') no-repeat center center fixed;
+    background: url('https://static.vecteezy.com/system/resources/thumbnails/034/453/909/small/pink-and-purple-peony-flowers-on-the-dark-background-ai-generative-free-photo.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -24,3 +34,19 @@ body::before {
     transform: scale(1.2); /* Prevents sharp edges on blur */
     z-index: -1;
 }
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #4f46e5, #9333ea);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }

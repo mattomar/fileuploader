@@ -43,7 +43,9 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
+    background: #444;
+    color: white;
   }
   
   .sign-in {
@@ -70,3 +72,28 @@
     object-fit: contain; /* Ensures image scales properly */
 
   }
+
+
+  .my-folders {
+    background: #444;
+    color: white;
+  }
+  
+  .my-folders:hover {
+    background: #666;
+  }
+
+
+  .btn,
+.btn:link,
+.btn:visited {
+  color: white;
+  text-decoration: none;
+}
+
+.logo,
+.logo:link,
+.logo:visited {
+  text-decoration: none;
+  color: inherit;
+}

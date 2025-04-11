@@ -1,0 +1,68 @@
+.folder-file-container {
+    flex: 1; /* Take remaining vertical space */
+    padding: 1rem;
+    box-sizing: border-box;
+    min-height: 0; /* important in flex layout */
+  }
+  
+  
+  .main-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .upload-section {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .selected-file {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #374151;
+  }
+  
+  .upload-result {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .upload-success {
+    color: #059669;
+  }
+  
+  .upload-error {
+    color: #dc2626;
+    margin-top: 0.5rem;
+  }
+  
+  .folder-list,
+  .file-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    max-height: 400px;       /* Adjust this as needed */
+    overflow-y: auto;
+    padding-right: 0.5rem;   /* Optional: for scrollbar spacing */
+  }
+  
+  
+  
+  .file-section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    color: white;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    justify-content: center;
+  }
