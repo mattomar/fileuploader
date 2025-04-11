@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/buttons.css";
 
-const UploadButton = ({ uploading, selectedFile, onChange }) => {
+const UploadButton = ({ uploading, onChange, disabled }) => {
   return (
     <>
       <input 
@@ -9,13 +9,10 @@ const UploadButton = ({ uploading, selectedFile, onChange }) => {
         id="file-upload" 
         onChange={onChange} 
         hidden 
+        disabled={disabled}
       />
       <label htmlFor="file-upload" className="upload-btn">
-        {uploading
-          ? "Uploading..."
-          : selectedFile
-          ? "File Selected"
-          : "Upload"}
+        {uploading ? "Uploading..." : "Upload"}
       </label>
     </>
   );

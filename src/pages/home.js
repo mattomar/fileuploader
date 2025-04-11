@@ -10,9 +10,7 @@ import {
 } from "../utils/api";
 import { Link } from "react-router-dom";
 
-
 const Home = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [folders, setFolders] = useState([]);
   const [uploadedURL, setUploadedURL] = useState("");
@@ -31,28 +29,18 @@ const Home = () => {
     loadFolders();
   }, []);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setSelectedFile(file);
     setError("");
     setUploadedURL("");
-  };
-
-  const handleUploadClick = async () => {
-    if (!selectedFile) return;
-
     setUploading(true);
-    setError("");
-    setUploadedURL("");
 
     try {
       const data = selectedFolder
-        ? await uploadFileToFolder(selectedFile, selectedFolder)
-        : await uploadFile(selectedFile);
-
-      console.log("Upload response:", data);
+        ? await uploadFileToFolder(file, selectedFolder)
+        : await uploadFile(file);
 
       if (data?.url) {
         setUploadedURL(data.url);
@@ -74,64 +62,51 @@ const Home = () => {
       <div className="desc">
         Upload a file to <strong>Shadow Drive</strong> and get a sharable link
       </div>
-  
+
       <div className="upload-folder">
-  {!getToken() && (
-    <div className="blur-overlay">
-      <p>
-        Please <Link to="/login">sign in</Link> or{" "}
-        <Link to="/signup">sign up</Link> to upload files.
-      </p>
-    </div>
-  )}
+        {!getToken() && (
+          <div className="blur-overlay">
+            <p>
+              Please <Link to="/login">sign in</Link> or{" "}
+              <Link to="/signup">sign up</Link> to upload files.
+            </p>
+          </div>
+        )}
 
-  <img src={hardisckIcon} alt="Storage" className="storage-icon" />
+        <img src={hardisckIcon} alt="Storage" className="storage-icon" />
 
-  <select
-    value={selectedFolder}
-    onChange={(e) => setSelectedFolder(e.target.value)}
-    className="folder-dropdown"
-    disabled={!getToken()}
-  >
-    <option value="">Select folder (or save outside)</option>
-    {Array.isArray(folders) &&
-      folders.map((folder) => (
-        <option key={folder.id} value={folder.id}>
-          {folder.name}
-        </option>
-      ))}
-  </select>
+        <select
+          value={selectedFolder}
+          onChange={(e) => setSelectedFolder(e.target.value)}
+          className="folder-dropdown"
+          disabled={!getToken()}
+        >
+          <option value="">Select folder (or save outside)</option>
+          {Array.isArray(folders) &&
+            folders.map((folder) => (
+              <option key={folder.id} value={folder.id}>
+                {folder.name}
+              </option>
+            ))}
+        </select>
 
-  <UploadButton
-    uploading={uploading}
-    selectedFile={selectedFile}
-    onChange={handleFileChange}
-    disabled={!getToken()}
-  />
+        <UploadButton
+          uploading={uploading}
+          onChange={handleFileChange}
+          disabled={!getToken()}
+        />
 
-  {selectedFile && <p className="file-name">{selectedFile.name}</p>}
+        {uploadedURL && (
+          <div className="uploaded-url">
+            <p>Uploaded URL:</p>
+            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
+              {uploadedURL}
+            </a>
+          </div>
+        )}
 
-  {selectedFile && (
-    <button
-      className="upload-real-btn"
-      onClick={handleUploadClick}
-      disabled={uploading || !getToken()}
-    >
-      {uploading ? "Uploading..." : "Upload"}
-    </button>
-  )}
-
-  {uploadedURL && (
-    <div className="uploaded-url">
-      <p>Uploaded URL:</p>
-      <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-        {uploadedURL}
-      </a>
-    </div>
-  )}
-
-  {error && <p className="upload-error">{error}</p>}
-</div>
+        {error && <p className="upload-error">{error}</p>}
+      </div>
     </div>
   );
 };

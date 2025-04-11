@@ -40,7 +40,7 @@ const FileCard = ({ file, onDelete }) => {
       <img className="file-icon" src={getFileIcon(file.name)} alt="file type" />
       <a
         className="card-name"
-        href={`http://localhost:5016/${file.path}`}
+        href={`${file.path}`}
         target="_blank"
         rel="noreferrer"
       >
