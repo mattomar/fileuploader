@@ -1,36 +1,23 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ Import axios
+import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/authForm";
+import { signup } from "../utils/api";
 
 const Signup = () => {
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // 🔹 React Router navigation
-  const handleSignup = async (e, { firstName, lastName, email, password }) => {
+  const navigate = useNavigate();
+
+  const handleSignup = async (e, formData) => {
     e.preventDefault();
     setError("");
-  
+
     try {
-      const response = await fetch("http://localhost:5014/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, password }),
-      });
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || "Signup failed.");
-      }
-  
-      console.log("Signup successful:", data);
-      navigate("/login"); // 🔹 Redirect after signup
-    } catch (error) {
-      setError(error.message);
-      console.error(error);
+      await signup(formData);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
     }
   };
-  
 
   return (
     <div>

@@ -6,6 +6,7 @@ import {
   fetchFolders,
   uploadFileToFolder,
   uploadFile,
+  deleteFile,
   getToken
 } from "../utils/api";
 import { Link } from "react-router-dom";
@@ -13,9 +14,10 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const [selectedFolder, setSelectedFolder] = useState("");
   const [folders, setFolders] = useState([]);
-  const [uploadedURL, setUploadedURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
 
   useEffect(() => {
     const loadFolders = async () => {
@@ -26,7 +28,22 @@ const Home = () => {
         console.error("Failed to fetch folders:", err);
       }
     };
-    loadFolders();
+
+    if (isLoggedIn) {
+      loadFolders();
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const checkLoginStatus = () => setIsLoggedIn(!!getToken());
+
+    window.addEventListener("storage", checkLoginStatus);
+    const interval = setInterval(checkLoginStatus, 500);
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleFileChange = async (event) => {
@@ -34,19 +51,17 @@ const Home = () => {
     if (!file) return;
 
     setError("");
-    setUploadedURL("");
+    setSuccess(false);
     setUploading(true);
 
     try {
-      const data = selectedFolder
-        ? await uploadFileToFolder(file, selectedFolder)
-        : await uploadFile(file);
-
-      if (data?.url) {
-        setUploadedURL(data.url);
+      if (selectedFolder) {
+        await uploadFileToFolder(file, selectedFolder);
       } else {
-        setError("Upload succeeded, but no URL returned.");
+        await uploadFile(file);
       }
+
+      setSuccess(true); // ✅ Show success
     } catch (err) {
       console.error("Upload failed:", err);
       setError("Upload failed. Check your server.");
@@ -64,7 +79,7 @@ const Home = () => {
       </div>
 
       <div className="upload-folder">
-        {!getToken() && (
+        {!isLoggedIn && (
           <div className="blur-overlay">
             <p>
               Please <Link to="/login">sign in</Link> or{" "}
@@ -79,7 +94,7 @@ const Home = () => {
           value={selectedFolder}
           onChange={(e) => setSelectedFolder(e.target.value)}
           className="folder-dropdown"
-          disabled={!getToken()}
+          disabled={!isLoggedIn}
         >
           <option value="">Select folder (or save outside)</option>
           {Array.isArray(folders) &&
@@ -93,16 +108,11 @@ const Home = () => {
         <UploadButton
           uploading={uploading}
           onChange={handleFileChange}
-          disabled={!getToken()}
+          disabled={!isLoggedIn}
         />
 
-        {uploadedURL && (
-          <div className="uploaded-url">
-            <p>Uploaded URL:</p>
-            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-              {uploadedURL}
-            </a>
-          </div>
+        {success && (
+          <p className="upload-success">✅ Uploaded successfully!</p>
         )}
 
         {error && <p className="upload-error">{error}</p>}

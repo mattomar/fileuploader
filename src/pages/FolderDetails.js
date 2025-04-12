@@ -6,7 +6,6 @@ import UploadButton from "../components/uploadFileButton";
 import CreateFolder from "../components/createFolderForm";
 import {
   uploadFileToFolder,
-  createSubFolder,
   getFolderById,
 } from "../utils/api";
 
@@ -49,7 +48,7 @@ const FolderDetails = () => {
     try {
       const result = await uploadFileToFolder(file, id);
       await fetchFolder();
-      setUploadedURL(result?.url || ""); // Adjust based on actual API response
+      setUploadedURL(result?.url || "");
     } catch (err) {
       console.error("Upload failed:", err);
       setError("Upload failed. Please try again.");
@@ -60,6 +59,14 @@ const FolderDetails = () => {
 
   const handleNewFolder = (newFolder) => {
     setSubfolders((prev) => [newFolder, ...prev]);
+  };
+
+  const handleFolderMove = (movedFolderId) => {
+    setSubfolders((prev) => prev.filter((f) => f.id !== movedFolderId));
+  };
+
+  const handleFileMove = (movedFileId) => {
+    setFiles((prev) => prev.filter((f) => f.id !== movedFileId));
   };
 
   if (!folder) return <p>Loading...</p>;
@@ -75,7 +82,6 @@ const FolderDetails = () => {
             selectedFile={selectedFile}
             onChange={handleFileChange}
           />
-
           <CreateFolder parentId={id} onFolderCreated={handleNewFolder} />
         </div>
 
@@ -97,10 +103,22 @@ const FolderDetails = () => {
 
       <div className="folder-list">
         {subfolders.map((sub) => (
-          <FolderCard key={sub.id} folder={sub} />
+          <FolderCard
+            key={sub.id}
+            folder={sub}
+            onDelete={handleFolderMove}
+            onMove={handleFolderMove}
+            refresh={fetchFolder} // auto-update when moved
+          />
         ))}
         {files.map((file) => (
-          <FileCard key={file.id} file={file} />
+          <FileCard
+            key={file.id}
+            file={file}
+            onDelete={handleFileMove}
+            onMove={handleFileMove}
+            refresh={fetchFolder} // auto-update when moved
+          />
         ))}
       </div>
     </div>

@@ -44,7 +44,7 @@ const FolderFileView = () => {
       const data = await uploadFile(file);
       if (data.url) {
         setUploadedURL(data.url);
-        fetchFoldersAndFiles(); // Refresh files
+        fetchFoldersAndFiles();
       } else {
         setError("Upload succeeded, but no URL returned.");
       }
@@ -93,6 +93,7 @@ const FolderFileView = () => {
             onDelete={(deletedId) =>
               setFolders((prevFolders) => prevFolders.filter((f) => f.id !== deletedId))
             }
+            refresh={fetchFoldersAndFiles}
           />
         ))}
         {orphanFiles.map((file) => (

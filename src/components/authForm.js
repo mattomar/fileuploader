@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 import "../styles/authForm.css";
 
-const AuthForm = ({ type, onSubmit }) => {
+const AuthForm = ({ type, onSubmit, disabled }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,6 +24,7 @@ const AuthForm = ({ type, onSubmit }) => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
+              disabled={disabled}
             />
             <input
               type="text"
@@ -31,6 +32,7 @@ const AuthForm = ({ type, onSubmit }) => {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
+              disabled={disabled}
             />
           </>
         )}
@@ -41,6 +43,7 @@ const AuthForm = ({ type, onSubmit }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          disabled={disabled}
         />
         <input
           type="password"
@@ -48,10 +51,17 @@ const AuthForm = ({ type, onSubmit }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          disabled={disabled}
         />
 
-        <button type="submit">
-          {type === "signup" ? "Sign Up" : "Log In"}
+        <button type="submit" disabled={disabled}>
+          {disabled
+            ? type === "signup"
+              ? "Signing Up..."
+              : "Logging In..."
+            : type === "signup"
+            ? "Sign Up"
+            : "Log In"}
         </button>
       </form>
     </div>

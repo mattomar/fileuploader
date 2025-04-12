@@ -11,16 +11,7 @@ const Header = () => {
   useEffect(() => {
     const handleStorageChange = () => setIsLoggedIn(!!getToken());
     window.addEventListener("storage", handleStorageChange);
-
-    // In case logout is triggered in the same tab
-    const interval = setInterval(() => {
-      setIsLoggedIn(!!getToken());
-    }, 500); // optional, makes sure it updates instantly
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      clearInterval(interval);
-    };
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   return (
@@ -31,6 +22,7 @@ const Header = () => {
           <span className="bold">SHDW</span> Drive
         </h1>
       </Link>
+
       <div className="auth-buttons">
         {isLoggedIn ? (
           <>

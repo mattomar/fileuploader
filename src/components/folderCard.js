@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { deleteFolder, moveFile, moveFolder } from "../utils/api";
 import "../styles/cardStyles.css";
 
-const FolderCard = ({ folder, onDelete }) => {
+const FolderCard = ({ folder, onDelete, refresh }) => {
   const navigate = useNavigate();
   const [isDragOver, setIsDragOver] = useState(false);
-  const fileCount = Array.isArray(folder.files) ? folder.files.length : 0;
 
   const handleClick = () => {
     navigate(`/folder/${folder.id}`);
@@ -44,8 +43,10 @@ const FolderCard = ({ folder, onDelete }) => {
 
     if (type === "file") {
       await moveFile(id, folder.id);
+      if (refresh) refresh();
     } else if (type === "folder" && id !== folder.id) {
       await moveFolder(id, folder.id);
+      if (refresh) refresh();
     }
   };
 
@@ -65,7 +66,6 @@ const FolderCard = ({ folder, onDelete }) => {
         alt="Folder"
       />
       <div className="card-name">{folder.name}</div>
-      <div className="card-info">Files: {fileCount}</div>
       <img
         className="delete-btn"
         src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"

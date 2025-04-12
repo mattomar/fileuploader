@@ -6,8 +6,8 @@ const LogoutButton = ({ onLogout }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    if (onLogout) onLogout();
-    navigate("/");
+    if (onLogout) onLogout(); // For Header state update
+    navigate("/login");
   };
 
   return (
