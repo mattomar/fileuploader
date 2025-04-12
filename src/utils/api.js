@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5018";
+const API_BASE = "http://localhost:5011";
 
 // Get token from localStorage
 export const getToken = () => {
@@ -178,4 +178,38 @@ export const login = async ({ email, password }) => {
   }
 
   return data;
+};
+
+
+export const renameFolder = async (folderId, newName) => {
+  const response = await fetchWithAuth(`${API_BASE}/api/folders/${folderId}/rename`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: newName }), // Use 'name' as per your backend API
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to rename folder");
+  }
+
+  return await response.json();
+};
+
+
+export const renameFile = async (fileId, newName) => {
+  const response = await fetchWithAuth(`${API_BASE}/api/files/${fileId}/rename`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ newName }), // Use 'newName' instead of 'name'
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to rename file");
+  }
+
+  return await response.json();
 };

@@ -1,5 +1,5 @@
-import React from "react";
-import { deleteFile } from "../utils/api";
+import React, { useState } from "react";
+import { deleteFile, renameFile } from "../utils/api";
 import "../styles/cardStyles.css";
 
 const getFileIcon = (filename) => {
@@ -7,7 +7,7 @@ const getFileIcon = (filename) => {
 
   if (["png", "jpg", "jpeg", "gif", "bmp"].includes(ext))
     return "https://cdn-icons-png.flaticon.com/512/337/337940.png";
-    if (["mp3", "wav", "ogg", "m4a"].includes(ext))
+  if (["mp3", "wav", "ogg", "m4a"].includes(ext))
     return "https://cdn-icons-png.flaticon.com/512/727/727245.png";
   if (ext === "pdf")
     return "https://cdn-icons-png.flaticon.com/512/337/337946.png";
@@ -27,13 +27,26 @@ const getViewableUrl = (file) => {
   return url;
 };
 
-const FileCard = ({ file, onDelete }) => {
+const FileCard = ({ file, onDelete, refresh }) => {
   const handleDelete = async (e) => {
     e.stopPropagation();
     const confirmDelete = window.confirm(`Delete file "${file.name}"?`);
     if (confirmDelete) {
       await deleteFile(file.id);
       if (onDelete) onDelete(file.id);
+    }
+  };
+
+  const handleRename = async (e) => {
+    e.stopPropagation();
+    const newName = prompt("Enter new file name:", file.name);
+    if (newName && newName.trim() !== "" && newName !== file.name) {
+      try {
+        await renameFile(file.id, newName.trim());
+        if (refresh) refresh(); // ✅ trigger a refresh after rename
+      } catch (error) {
+        alert("Failed to rename the file");
+      }
     }
   };
 
@@ -70,11 +83,21 @@ const FileCard = ({ file, onDelete }) => {
       style={{ cursor: "pointer" }}
     >
       <img className="file-icon" src={getFileIcon(file.name)} alt="file type" />
-      <span className="card-name">{file.name}</span>
+      <div className="card-name">{file.name}</div>
+
+      <img
+        className="rename-btn"
+        src="https://cdn-icons-png.flaticon.com/512/1159/1159633.png"
+        alt="Rename"
+        title="Rename File"
+        onClick={handleRename}
+      />
+
       <img
         className="delete-btn"
         src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
         alt="Delete"
+        title="Delete File"
         onClick={handleDelete}
       />
     </div>

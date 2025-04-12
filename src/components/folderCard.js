@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteFolder, moveFile, moveFolder } from "../utils/api";
+import { deleteFolder, moveFile, moveFolder, renameFolder } from "../utils/api";
 import "../styles/cardStyles.css";
 
 const FolderCard = ({ folder, onDelete, refresh }) => {
@@ -17,6 +17,19 @@ const FolderCard = ({ folder, onDelete, refresh }) => {
     if (confirmDelete) {
       await deleteFolder(folder.id);
       if (onDelete) onDelete(folder.id);
+    }
+  };
+
+  const handleRename = async (e) => {
+    e.stopPropagation();
+    const newName = prompt("Enter new folder name:", folder.name);
+    if (newName && newName.trim() !== "" && newName !== folder.name) {
+      try {
+        await renameFolder(folder.id, newName.trim());
+        if (refresh) refresh();
+      } catch (err) {
+        alert("Failed to rename folder: " + err.message);
+      }
     }
   };
 
@@ -66,10 +79,20 @@ const FolderCard = ({ folder, onDelete, refresh }) => {
         alt="Folder"
       />
       <div className="card-name">{folder.name}</div>
+
+      <img
+        className="rename-btn"
+        src="https://cdn-icons-png.flaticon.com/512/1159/1159633.png"
+        alt="Rename"
+        title="Rename Folder"
+        onClick={handleRename}
+      />
+
       <img
         className="delete-btn"
         src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
         alt="Delete"
+        title="Delete Folder"
         onClick={handleDelete}
       />
     </div>
