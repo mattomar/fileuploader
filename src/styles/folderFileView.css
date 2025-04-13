@@ -1,68 +1,102 @@
+.main-container {
+  display: flex;
+  gap: 2rem; /* Space between columns */
+  flex-wrap: wrap;
+  justify-content: space-between;
+  color: white;
+}
+
+.main-title{
+  color: white;
+}
+
+/* Folder and File container styles */
 .folder-file-container {
-    flex: 1; /* Take remaining vertical space */
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  min-height: 0;
+  display: flex;
+  flex-direction: column; /* Stack content vertically by default */
+}
+
+/* Input container */
+.input-container {
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* File and folder lists */
+.file-list,
+.folder-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Title for file sections */
+.file-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  color: white;
+}
+
+/* Button row for actions */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  /* Stack the input section and file container in a new column layout */
+  .main-container {
+    flex-direction: column; /* Stack the input and file container */
+  }
+
+  /* Ensure input section is in its own column */
+  .input-container {
+    flex: 1;
     padding: 1rem;
     box-sizing: border-box;
-    min-height: 0; /* important in flex layout */
-  }
-  
-  
-  .main-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .upload-section {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .selected-file {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #374151;
-  }
-  
-  .upload-result {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .upload-success {
-    color: #059669;
-  }
-  
-  .upload-error {
-    color: #dc2626;
-    margin-top: 0.5rem;
-  }
-  
-  .folder-list,
-  .file-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    display: block; /* Prevent overlap with file container */
     margin-top: 1rem;
-    max-height: 400px;       /* Adjust this as needed */
-    overflow-y: auto;
-    padding-right: 0.5rem;   /* Optional: for scrollbar spacing */
   }
-  
-  
-  
+
+  /* File and folder containers adjust layout to remain the same */
+  .folder-file-container {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Ensure file section title is centered */
   .file-section-title {
     font-size: 1.2rem;
     font-weight: 600;
     margin-top: 2rem;
     color: white;
+    text-align: center;
   }
-  
-  .button-row {
+
+  /* Adjust file and folder lists for small screens */
+  .file-list,
+  .folder-list {
     display: flex;
-    gap: 0.75rem;
-    align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 1rem;
-    justify-content: center;
+    gap: 1rem;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
   }
+}

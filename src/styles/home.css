@@ -122,6 +122,7 @@
 
 .upload-folder {
   position: relative;
+  overflow: hidden;
 }
 
 .blur-overlay {
@@ -134,6 +135,7 @@
   backdrop-filter: blur(4px);
   z-index: 10;
   border-radius: 12px;
+  inset: 0; /* shorthand for top, right, bottom, left = 0 */
 
   display: flex;
   align-items: center;
@@ -150,4 +152,45 @@
 .blur-overlay a {
   color: #00ccff;
   text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .jumbotron {
+    padding: 1rem;
+  }
+
+  .upload-folder {
+    width: 100%;
+    max-width: 95vw;
+    height: auto;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .on-chain {
+    font-size: 42px;
+  }
+
+  .on-chain::before {
+    top: -15px;
+    left: -50px;
+    width: 160px;
+    height: 80px;
+  }
+
+  .on-chain::after {
+    left: 140px;
+    width: 220px;
+    height: 40px;
+    top: 30px;
+
+  }
+
+  .desc {
+    font-size: 16px;
+  }
+
+  .blur-overlay {
+    padding: 1rem;
+    font-size: 1rem;
+  }
 }

@@ -34,19 +34,25 @@ const FolderFileView = () => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     setSelectedFile(file);
     setUploading(true);
     setError("");
     setUploadedURL("");
-
+  
     try {
       const data = await uploadFile(file);
-      if (data.url) {
-        setUploadedURL(data.url);
-        fetchFoldersAndFiles();
-      } else {
-        setError("Upload succeeded, but no URL returned.");
+      console.log("Uploaded File Response:", data);
+  
+      if (data.file?.path) {
+        setUploadedURL(data.file.path);
+  
+        if (data.file.folderId === null) {
+          setOrphanFiles((prev) => [data.file, ...prev]);
+        }
+  
+        // Optional: sync with DB again
+        // await fetchFoldersAndFiles();
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -71,14 +77,11 @@ const FolderFileView = () => {
           <CreateFolder onFolderCreated={(newFolder) => setFolders((prev) => [newFolder, ...prev])} />
         </div>
 
-        {selectedFile && !uploading && <p className="selected-file">{selectedFile.name}</p>}
 
         {uploadedURL && (
           <div className="upload-result">
             <p className="upload-success">Uploaded URL:</p>
-            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-              {uploadedURL}
-            </a>
+          
           </div>
         )}
 
