@@ -118,15 +118,7 @@ const FolderFileView = () => {
           />
         </div>
 
-        {uploadedURL && (
-          <div className="upload-result">
-            <p className="upload-success">Uploaded URL:</p>
-            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-              {uploadedURL}
-            </a>
-          </div>
-        )}
-
+     
         {error && <p className="upload-error">{error}</p>}
       </div>
 

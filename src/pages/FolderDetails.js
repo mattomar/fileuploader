@@ -85,9 +85,7 @@ const FolderDetails = () => {
           <CreateFolder parentId={id} onFolderCreated={handleNewFolder} />
         </div>
 
-        {selectedFile && !uploading && (
-          <p className="selected-file">{selectedFile.name}</p>
-        )}
+
 
 
         {error && <p className="upload-error">{error}</p>}
