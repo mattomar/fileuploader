@@ -28,9 +28,13 @@ const Login = () => {
 
   return (
     <div>
-      <AuthForm type="login" onSubmit={handleLogin} disabled={loading} />
+      <AuthForm
+        type="login"
+        onSubmit={handleLogin}
+        disabled={loading}
+        error={error} // Passing error as prop
+      />
       {loading && <p>Logging in...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5011";
+const API_BASE = "https://fileuploader-server-production.up.railway.app";
 
 // Get token from localStorage
 export const getToken = () => {

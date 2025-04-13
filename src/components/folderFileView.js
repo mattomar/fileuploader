@@ -3,7 +3,7 @@ import FolderCard from "./folderCard";
 import FileCard from "./fileCard";
 import CreateFolder from "./createFolderForm";
 import UploadButton from "../components/uploadFileButton";
-import { fetchFolders, fetchFiles, uploadFile } from "../utils/api";
+import { fetchFolders, fetchFiles, uploadFile, moveFile } from "../utils/api";
 import "../styles/folderFileView.css";
 
 const FolderFileView = () => {
@@ -13,9 +13,17 @@ const FolderFileView = () => {
   const [uploadedURL, setUploadedURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [showInitialLoading, setShowInitialLoading] = useState(true);
+  const [movingFileIds, setMovingFileIds] = useState([]);
 
   useEffect(() => {
+    // show loading screen for 4 seconds
+    const timer = setTimeout(() => setShowInitialLoading(false), 3000);
+
+    // start fetching in the background
     fetchFoldersAndFiles();
+
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchFoldersAndFiles = async () => {
@@ -34,25 +42,19 @@ const FolderFileView = () => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     setSelectedFile(file);
     setUploading(true);
     setError("");
     setUploadedURL("");
-  
+
     try {
       const data = await uploadFile(file);
-      console.log("Uploaded File Response:", data);
-  
       if (data.file?.path) {
         setUploadedURL(data.file.path);
-  
         if (data.file.folderId === null) {
           setOrphanFiles((prev) => [data.file, ...prev]);
         }
-  
-        // Optional: sync with DB again
-        // await fetchFoldersAndFiles();
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -61,6 +63,42 @@ const FolderFileView = () => {
       setUploading(false);
     }
   };
+
+  const handleMoveFile = async (fileId, folderId) => {
+    setMovingFileIds((prev) => [...prev, fileId]);
+
+    try {
+      const response = await moveFile(fileId, folderId);
+      if (response.success) {
+        setOrphanFiles((prev) => prev.filter((file) => file.id !== fileId));
+        setFolders((prev) =>
+          prev.map((folder) =>
+            folder.id === folderId
+              ? {
+                  ...folder,
+                  files: [...(folder.files || []), response.file],
+                }
+              : folder
+          )
+        );
+      } else {
+        setError("Failed to move the file.");
+      }
+    } catch (err) {
+      console.error("Error moving file:", err);
+      setError("Error moving the file.");
+    } finally {
+      setMovingFileIds((prev) => prev.filter((id) => id !== fileId));
+    }
+  };
+
+  if (showInitialLoading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="folder-file-container">
@@ -73,15 +111,19 @@ const FolderFileView = () => {
             selectedFile={selectedFile}
             onChange={handleFileChange}
           />
-
-          <CreateFolder onFolderCreated={(newFolder) => setFolders((prev) => [newFolder, ...prev])} />
+          <CreateFolder
+            onFolderCreated={(newFolder) =>
+              setFolders((prev) => [newFolder, ...prev])
+            }
+          />
         </div>
-
 
         {uploadedURL && (
           <div className="upload-result">
             <p className="upload-success">Uploaded URL:</p>
-          
+            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
+              {uploadedURL}
+            </a>
           </div>
         )}
 
@@ -94,18 +136,21 @@ const FolderFileView = () => {
             key={folder.id}
             folder={folder}
             onDelete={(deletedId) =>
-              setFolders((prevFolders) => prevFolders.filter((f) => f.id !== deletedId))
+              setFolders((prev) => prev.filter((f) => f.id !== deletedId))
             }
             refresh={fetchFoldersAndFiles}
           />
         ))}
+
         {orphanFiles.map((file) => (
           <FileCard
             key={file.id}
             file={file}
+            loading={movingFileIds.includes(file.id)}
             onDelete={(deletedId) =>
               setOrphanFiles((prev) => prev.filter((f) => f.id !== deletedId))
             }
+            onMove={(folderId) => handleMoveFile(file.id, folderId)}
           />
         ))}
       </div>

@@ -51,3 +51,10 @@
   .auth-form button:hover {
     background-color: #3b5cc2;
   }
+
+  .error-message {
+    color: red;  /* Red color for the error message */
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }

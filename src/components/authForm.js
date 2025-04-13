@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 import "../styles/authForm.css";
 
-const AuthForm = ({ type, onSubmit, disabled }) => {
+const AuthForm = ({ type, onSubmit, disabled, error }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,6 +53,8 @@ const AuthForm = ({ type, onSubmit, disabled }) => {
           required
           disabled={disabled}
         />
+
+{error && <p className="error-message">{error}</p>}  {/* Show error in red */}
 
         <button type="submit" disabled={disabled}>
           {disabled
