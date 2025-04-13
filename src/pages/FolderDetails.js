@@ -92,9 +92,6 @@ const FolderDetails = () => {
         {uploadedURL && (
           <div className="upload-result">
             <p className="upload-success">Uploaded URL:</p>
-            <a href={uploadedURL} target="_blank" rel="noopener noreferrer">
-              {uploadedURL}
-            </a>
           </div>
         )}
 
