@@ -89,10 +89,6 @@ const FolderDetails = () => {
           <p className="selected-file">{selectedFile.name}</p>
         )}
 
-        {uploadedURL && (
-          <div className="upload-result">
-          </div>
-        )}
 
         {error && <p className="upload-error">{error}</p>}
       </div>
