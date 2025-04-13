@@ -4,14 +4,18 @@ const HtmlWebpackPlugin = require("html-webpack-plugin"); // Import html-webpack
 module.exports = {
     entry: "./src/index.js", // Specify your entry point
     output: {
-        path: path.join(__dirname, 'dist'),
-        filename: 'index.bundle.js',
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'index.bundle.[contenthash].js',
+        publicPath: '/',
+        clean: true,
     },
     devServer: {
         port: 3007,
         open: true,
         hot: true,
         static: path.resolve(__dirname, 'dist'), // Serve content from the 'dist' folder
+        historyApiFallback: true, // <- add this
+
     },
     module: {
         rules: [
