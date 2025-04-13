@@ -19,6 +19,9 @@ const Home = () => {
   const [success, setSuccess] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
 
+  // Static limit (you can replace this with dynamic fetching if needed)
+  const cloudinaryUploadLimit = 10; // 10MB
+
   useEffect(() => {
     const loadFolders = async () => {
       try {
@@ -75,7 +78,7 @@ const Home = () => {
       <div className="file-uploader">File Uploader</div>
       <div className="on-chain">Your Stuff, On-Chain.</div>
       <div className="desc">
-        Upload a file to <strong>Shadow Drive</strong> and get a sharable link
+        Upload a file to <strong>Shadow Drive</strong> and manage your files
       </div>
 
       <div className="upload-folder">
@@ -116,6 +119,11 @@ const Home = () => {
         )}
 
         {error && <p className="upload-error">{error}</p>}
+
+        {/* Upload Limit Message */}
+        <div className="upload-limit-info">
+          <p><strong>Note:</strong> Please don't exceed the upload limit of {cloudinaryUploadLimit}MB.</p>
+        </div>
       </div>
     </div>
   );
