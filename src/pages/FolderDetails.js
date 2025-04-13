@@ -91,7 +91,6 @@ const FolderDetails = () => {
 
         {uploadedURL && (
           <div className="upload-result">
-            <p className="upload-success">Uploaded URL:</p>
           </div>
         )}
 
